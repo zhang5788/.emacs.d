@@ -1,7 +1,7 @@
-;;; init-recentf.el --- Initialize recentf configurations.
+;; init-custom.el --- Initialize custom configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -9,7 +9,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Commentary:
-;;             Recentf configurations.
+;;             Custom configurations.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -32,26 +32,36 @@
 ;;
 ;;; Code:
 
-(use-package recentf
-  :defer t
-  :config
-  (progn
-    (recentf-mode 1)
+(defgroup my nil
+  "Personal Emacs configurations."
+  :group 'extensions)
 
-    (eval-after-load 'ido
-      '(lambda()
-         (defun recentf-ido-find-file ()
-           "Find a recent file using ido."
-           (interactive)
-           (let ((file (ido-completing-read "Choose recent file: "
-                                            (-map 'abbreviate-file-name recentf-list)
-                                            nil t)))
-             (when file
-               (find-file file))))
-         (bind-key "C-x C-r" 'recentf-ido-find-file)))
-    ))
+(defcustom my-ac-method 'company
+  "Auto complete method: auto-complete' or `company'."
+  :type '(choice
+          (const :tag "Auto-Complete" auto-complete)
+          (const :tag "Company" company)))
 
-(provide 'init-recentf)
+(defcustom my-completion-method 'ivy
+  "Incremental complition method: `ido', `ivy' or `helm'."
+  :type '(choice
+          (const :tag "Ido" ido)
+          (const :tag "Ivy" ivy)
+          (const :tag "Helm" helm)))
+
+(defcustom my-desktop-restore t
+  "Restore desktop inlcuding buffers, sessions or not."
+  :type 'boolean)
+
+(defcustom my-profile-enable nil
+  "Enable the init profiler or not."
+  :type 'boolean)
+
+(let ((file (expand-file-name "custom.el" user-emacs-directory)))
+  (if (file-exists-p file)
+      (load-file file)))
+
+(provide 'init-custom)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; init-recentf.el ends here
+;;; init-custom.el ends here

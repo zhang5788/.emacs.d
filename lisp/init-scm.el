@@ -1,7 +1,7 @@
 ;; init-scm.el --- Initialize scm configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -37,6 +37,10 @@
   :defer t
   :bind (("C-x g" . magit-status)
          ([f9] . magit-status)))
+
+(use-package git-timemachine :defer t)
+(use-package gitconfig-mode :defer t)
+(use-package gitignore-mode :defer t)
 
 ;; Subversion
 (use-package psvn

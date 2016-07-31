@@ -1,7 +1,7 @@
 ;; init-basic.el --- Initialize basic configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -34,22 +34,41 @@
 
 (require 'init-const)
 
+;; Disable ad-handle-definition warning
+(setq ad-redefinition-action 'accept)
+
 ;; Personal information
 (setq user-full-name "Vincent Zhang")
 (setq user-mail-address "seagle012@gmail.com")
 
-;; Enviornment
+;; Environment
 (use-package exec-path-from-shell
   :defer t
-  :if sys/macp
-  :config (exec-path-from-shell-initialize))
+  :if sys/mac-x-p
+  :init (add-hook 'after-init-hook 'exec-path-from-shell-initialize))
 
 ;; Start server
 (use-package server
-  :commands server-running-p
-  :config
-  (unless (server-running-p)
-    (server-start)))
+  :defer t
+  :init (add-hook 'after-init-hook 'server-mode))
+
+;; History
+(if (fboundp 'save-place-mode)
+    ;; Emacs 25 has a proper mode for `save-place'
+    (use-package saveplace
+      :defer t
+      :init (add-hook 'after-init-hook 'save-place-mode))
+  ;; <= Emacs 24
+  (use-package saveplace) :config (setq save-place t))
+
+(use-package recentf
+  :defer t
+  :init (add-hook 'after-init-hook 'recentf-mode))
+
+(use-package savehist
+  :defer t
+  :init (add-hook 'after-init-hook 'savehist-mode)
+  :config (setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring)))
 
 (provide 'init-basic)
 

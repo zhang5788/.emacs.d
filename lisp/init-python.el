@@ -1,7 +1,7 @@
 ;; init-python.el --- Initialize python configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -35,20 +35,13 @@
 ;; Python Mode
 (use-package python
   :defer t
+  :defines gud-pdb-command-name pdb-path
   :config
   (progn
-    (add-hook 'python-mode-hook
-              '(lambda ()
-                 (define-key python-mode-map (kbd "RET") 'newline-and-indent)))
-
     (add-hook 'inferior-python-mode-hook
               '(lambda ()
                  (define-key inferior-python-mode-map "\C-c\C-z" 'kill-buffer-and-window)
                  (process-query-on-exit-flag (get-process "Python"))))
-
-    ;; fix python indent compatibility issue
-    (eval-after-load 'auto-indent-mode
-      (setq python-indent-guess-indent-offset nil))
 
     ;; iPython
     (if (executable-find "ipython")
@@ -74,17 +67,25 @@
     ;; Autopep8
     (use-package py-autopep8
       :defer t
-      :config (py-autopep8-enable-on-save))
+      :init (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
 
     ;; Anaconda
     (use-package anaconda-mode
       :defer t
       :diminish anaconda-mode
-      :init
-      (add-hook 'python-mode-hook 'anaconda-mode)
+      :init (add-hook 'python-mode-hook 'anaconda-mode)
       :config
-      (eval-after-load 'company
-        '(add-to-list 'company-backends 'company-anaconda)))
+      (progn
+        (eval-after-load 'auto-complete
+          '(use-package ac-anaconda
+             :defer t
+             :init (add-hook 'python-mode-hook 'ac-anaconda-setup)))
+
+        (eval-after-load 'company
+          '(use-package company-anaconda
+             :defer t
+             :defines company-backends
+             :init (add-to-list 'company-backends '(company-anaconda :with company-yasnippet))))))
     ))
 
 (provide 'init-python)

@@ -1,7 +1,7 @@
 ;; init-buffer.el --- Initialize ibuffer configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -34,22 +34,21 @@
 
 (use-package ibuffer
   :defer t
+  :defines ibuffer-saved-filter-groups
+  :commands ibuffer-switch-to-saved-filter-groups
   :bind ("C-x C-b" . ibuffer)
   :config
-  (setq ibuffer-saved-filter-groups
-        '(("default"
-           ("Dired" (mode . dired-mode))
-           ("Emacs Lisp" (mode . emacs-lisp-mode))
-           ("C" (mode . c-mode))
-           ("C++" (mode . c++-mode))
-           ("Org" (mode . org-mode))
-           ("Python" (mode . python-mode))
-           ("Ruby" (mode . ruby-mode))
-           ("Helm" (predicate string-match "Helm" mode-name))
-           ("Earmuffs" (name . "^\\*.*?\\*$")))))
-  (add-hook 'ibuffer-mode-hook
-            (lambda ()
-              (ibuffer-switch-to-saved-filter-groups "default"))))
+  (progn
+    (use-package ibuffer-vc
+      :defer t
+      :init
+      (add-hook 'ibuffer-hook
+                (lambda ()
+                  (ibuffer-vc-set-filter-groups-by-vc-root)
+                  (unless (eq ibuffer-sorting-mode 'alphabetic)
+                    (ibuffer-do-sort-by-alphabetic))))
+      )
+    ))
 
 (provide 'init-ibuffer)
 

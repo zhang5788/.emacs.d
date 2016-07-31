@@ -1,7 +1,7 @@
 ;; init-projectile.el --- Initialize projectile configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -35,9 +35,21 @@
 (use-package projectile
   :defer t
   :bind ("C-S-t" . projectile-find-file)
+  :init
+  (progn
+    ;; DO NOT use projectile-global-mode
+    ;; to avoid hange issue in tramp
+    (add-hook 'text-mode-hook 'projectile-mode)
+    (add-hook 'prog-mode-hook 'projectile-mode)
+    )
   :config
   (progn
-    (projectile-global-mode 1)
+    (setq projectile-mode-line
+          '(:eval
+            (if (file-remote-p default-directory)
+                ""
+              (format " [%s]"
+                      (projectile-project-name)))))
 
     (setq projectile-indexing-method 'alien)
 
@@ -46,17 +58,17 @@
     ;;         projectile-root-top-down-recurring
     ;;         projectile-root-bottom-up))
 
-    ;; perforce project
+    ;; Support Perforce project
     (let ((val (or (getenv "P4CONFIG") ".p4config")))
       (add-to-list 'projectile-project-root-files-bottom-up val))
 
     (when (executable-find "ag")
       (let ((val (concat "ag -U -l --nocolor"
-                         (mapconcat 'identity (cons "" projectile-globally-ignored-directories) " --ignore-dir=")
+                         (mapconcat 'identity
+                                    (cons "" projectile-globally-ignored-directories)
+                                    " --ignore-dir=")
                          " -g . | tr '\\n' '\\0'")))
         (setq projectile-generic-command val)))
-
-    (setq projectile-mode-line '(:eval (format " [%s]" (projectile-project-name))))
 
     ;; Rails
     (use-package projectile-rails
@@ -64,7 +76,7 @@
       :init (add-hook 'projectile-mode-hook 'projectile-rails-on))
     ))
 
-  (provide 'init-projectile)
+(provide 'init-projectile)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init-projectile.el ends here

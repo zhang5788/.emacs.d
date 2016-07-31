@@ -1,7 +1,7 @@
 ;;; init-helm.el --- Initialize helm configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -39,7 +39,8 @@
             helm-imenu-fuzzy-match
             helm-apropos-fuzzy-match
             helm-semantic-fuzzy-match
-            helm-lisp-fuzzy-completion)
+            helm-lisp-fuzzy-completion
+            helm-make-completion-method)
   :commands helm-autoresize-mode helm-info-emacs
   :bind
   (("C-x b"   . helm-mini)
@@ -52,6 +53,15 @@
    ("C-h a"   . helm-apropos)
    ("C-h i"   . helm-info-emacs)
    ("C-."     . helm-imenu))
+  :init
+  (progn
+    (add-hook 'after-init-hook
+              '(lambda ()
+                 (helm-mode 1)
+                 (helm-adaptive-mode 1)))
+    (add-hook 'desktop-after-read-hook
+              '(lambda () (diminish 'helm-mode)))
+    )
   :config
   (progn
     (require 'helm-config)
@@ -76,12 +86,10 @@
     (bind-key "TAB" 'helm-execute-persistent-action helm-map)
     (bind-key "C-z" 'helm-select-action helm-map)
 
-    ;; modes
-    (helm-mode 1)
-    ;; (helm-autoresize-mode 1)
-    ;; (helm-adaptive-mode 1)
-
     ;; plugins
+    (use-package helm-flx
+      :config (helm-flx-mode 1))
+
     (use-package helm-descbinds
       :defer t
       :bind ("C-h b" . helm-descbinds))
@@ -108,6 +116,15 @@
     (use-package helm-projectile :defer t)
     (use-package helm-flycheck :defer t)
     (use-package helm-bm :defer t)
+
+    ;; Combines isearch, ace-jump-mode, avy and helm-swoop.
+    (use-package ace-isearch
+      :diminish ace-isearch-mode
+      :bind (:map isearch-mode-map
+                  ("C-:" . ace-isearch-jump-during-isearch))
+      :config (global-ace-isearch-mode 1)
+      (setq ace-isearch-function 'avy-goto-char)
+      (setq ace-isearch-use-jump 'printing-char))
     ))
 
 (provide 'init-helm)

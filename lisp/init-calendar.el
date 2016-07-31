@@ -1,7 +1,7 @@
 ;; init-calendar.el --- Initialize calendar configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -37,17 +37,18 @@
 (use-package cal-china-x
   :defer t
   :commands cal-china-x-setup
-  :init (cal-china-x-setup)
+  :init (add-hook 'after-init-hook 'cal-china-x-setup)
   :config
-  (setq calendar-mark-holidays-flag t)
-  (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
-  (setq calendar-holidays cal-china-x-important-holidays)
+  (progn
+    (setq calendar-mark-holidays-flag t)
+    (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+    (setq calendar-holidays cal-china-x-important-holidays)
 
-  ;; `S' can show the time of sunrise and sunset on Calendar
-  (setq calendar-location-name "Chengdu"
-        calendar-latitude 30.67
-        calendar-longitude 104.06)
-  )
+    ;; `S' can show the time of sunrise and sunset on Calendar
+    (setq calendar-location-name "Chengdu"
+          calendar-latitude 30.67
+          calendar-longitude 104.06)
+    ))
 
 (provide 'init-calendar)
 

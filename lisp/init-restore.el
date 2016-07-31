@@ -1,7 +1,7 @@
 ;; init-restore.el --- Initialize restore configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -32,20 +32,11 @@
 ;;
 ;;; Code:
 
-(use-package saveplace
-  :config (setq save-place t))
-;; (customize-set-variable 'save-place t)
-
-(use-package savehist
-  :config (savehist-mode 1))
-
-(use-package desktop
-  :config
-  (desktop-save-mode 1)
-  (setq desktop-load-locked-desktop t))
+(desktop-save-mode 1)
 
 (use-package persistent-scratch
-  :config (persistent-scratch-setup-default))
+  :defer t
+  :init (add-hook 'desktop-after-read-hook 'persistent-scratch-setup-default))
 
 (provide 'init-restore)
 

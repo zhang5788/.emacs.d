@@ -1,7 +1,7 @@
 ;; init-emacs-lisp.el --- Initialize Emacs Lisp configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -41,28 +41,45 @@
 (use-package eldoc
   :defer t
   :diminish eldoc-mode
-  :init
-  (progn
-    (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-    (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-    (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
-    ))
+  :init (progn
+          (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+          (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+          (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
+
+;; Make M-. and M-, work in elisp like they do in slime.
+;; In Emacs 25, xref is perfect, so only enable in <=24.
+(use-package elisp-slime-nav
+  :defer t
+  :if (< emacs-major-version 25)
+  :diminish elisp-slime-nav-mode
+  :init (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook lisp-interaction-mode-hook))
+          (add-hook hook 'elisp-slime-nav-mode)))
+
+;; Interactive macro expander
+(use-package macrostep
+  :defer t
+  :bind (:map emacs-lisp-mode-map
+              ("C-c e" . macrostep-expand)))
 
 ;; Byte compiler
 (defun byte-compile-init-dir ()
   "Byte-compile all your dotfiles."
   (interactive)
+  (setq use-package-always-ensure nil)  ; Don't install unnedeeded packages.
   (byte-recompile-file user-init-file 0 0)
-  (byte-recompile-directory (concat user-emacs-directory "lisp") 0))
+  (byte-recompile-directory (expand-file-name "lisp" user-emacs-directory) 0)
+  (byte-recompile-directory (expand-file-name "site-lisp" user-emacs-directory) 0)
+  (setq use-package-always-ensure t))
 
-;; (add-hook 'after-init-hook 'byte-compile-init-dir)
 (add-hook 'kill-emacs-hook 'byte-compile-init-dir)
 
 (defun recompile-el-on-save ()
   "If you're saving an elisp file, likely the .elc is no longer valid."
   (add-hook 'after-save-hook
             (lambda ()
-              (byte-recompile-file buffer-file-name 0 0))
+              (setq use-package-always-ensure nil)  ; Don't install unnedeeded packages.
+              (byte-recompile-file buffer-file-name 0 0)
+              (setq use-package-always-ensure t))
             nil
             t))
 

@@ -1,7 +1,7 @@
 ;; init-fish.el --- Initialize fish configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -35,13 +35,14 @@
 ;; Fish Mode
 (use-package fish-mode
   :defer t
-  :config
-  (add-hook 'fish-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook 'fish_indent-before-save)))
-  (eval-after-load 'auto-complete
-    '(add-hook 'fish-mode-hook 'auto-complete-mode))
-  )
+  :init
+  (progn
+    (add-hook 'fish-mode-hook
+              (lambda ()
+                (add-hook 'before-save-hook 'fish_indent-before-save)))
+    (eval-after-load 'auto-complete
+      '(add-hook 'fish-mode-hook 'auto-complete-mode))
+    ))
 
 (provide 'init-fish)
 

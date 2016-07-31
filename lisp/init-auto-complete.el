@@ -1,7 +1,7 @@
 ;; init-auto-complete.el --- Initialize auto-complete configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -36,9 +36,7 @@
   :defer t
   :diminish auto-complete-mode
   :functions ac-set-trigger-key
-  :bind (("\M-/" . ac-start)
-         :map ac-completing-map ("\M-/" . ac-stop)
-         :map ac-mode-map ("M-TAB" . auto-complete))
+  :bind (("M-/" . ac-start))
   :config
   (progn
     (ac-config-default)
@@ -46,16 +44,16 @@
     (ac-set-trigger-key "TAB")
     (setq ac-delay 0.3)
 
+    (define-key ac-completing-map "M-/" 'ac-stop)
+    (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+
     (setq ac-sources
           '(ac-source-yasnippet
             ac-source-imenu
             ac-source-abbrev
             ac-source-words-in-same-mode-buffers
             ac-source-files-in-current-dir
-            ac-source-filename ))
-
-    (use-package ac-inf-ruby :defer t)
-    (use-package ac-js2 :defer t)
+            ac-source-filename))
     ))
 
 (provide 'init-auto-complete)

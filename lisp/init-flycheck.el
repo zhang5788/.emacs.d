@@ -1,7 +1,7 @@
 ;; init-flycheck.el --- Initialize flycheck configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -38,12 +38,16 @@
   :init
   (add-hook 'after-init-hook 'global-flycheck-mode)
   :config
-  (setq flycheck-indication-mode 'right-fringe)
-  (setq flycheck-emacs-lisp-load-path 'inherit))
+  (progn
+    (setq flycheck-indication-mode 'right-fringe)
+    (setq flycheck-emacs-lisp-load-path 'inherit)
 
-(use-package flycheck-pos-tip
-  :defer t
-  :config (flycheck-pos-tip-mode 1))
+    (use-package flycheck-pos-tip
+      :config (flycheck-pos-tip-mode 1))
+
+    (use-package avy-flycheck
+      :config (avy-flycheck-setup))
+    ))
 
 (provide 'init-flycheck)
 

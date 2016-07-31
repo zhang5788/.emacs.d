@@ -1,7 +1,7 @@
 ;;; init-ido.el --- Initialize ido configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -32,45 +32,73 @@
 ;;
 ;;; Code:
 
-;; Smex
-(use-package smex
-  :defer t
-  :bind (("M-x" . smex)
-         ("M-X" . smex-major-mode-commands)
-         ("C-c M-x" . execute-extended-command)))
-
-;; IDO
 (use-package ido
   :defer t
+  :init (add-hook 'after-init-hook 'ido-mode)
   :config
   (progn
-    (ido-mode 1)
     (ido-everywhere 1)
+
     (setq ido-use-filename-at-point 'guess)
     (setq ido-create-new-buffer 'always)
     (setq ido-enable-flex-matching t)
 
-    (use-package ido-ubiquitous
-      :config (ido-ubiquitous-mode 1))
+    (eval-after-load 'recentf
+      '(progn
+         (defun ido-recentf-find-file ()
+           "Find a recent file using ido."
+           (interactive)
+           (let ((file (ido-completing-read "Choose recent file: "
+                                            (-map 'abbreviate-file-name recentf-list)
+                                            nil t)))
+             (when file
+               (find-file file))))
+         (global-set-key (kbd "C-x C-r") 'ido-recentf-find-file)
+         ))
 
-    (use-package ido-at-point
-      :config (ido-at-point-mode 1))
-
-    (use-package ido-complete-space-or-hyphen
-      :config (ido-complete-space-or-hyphen-enable))
-
-    (use-package ido-sort-mtime
-      :config (ido-sort-mtime-mode 1))
+    (use-package ido-ubiquitous :config (ido-ubiquitous-mode 1))
+    (use-package ido-at-point :config (ido-at-point-mode 1))
+    (use-package ido-complete-space-or-hyphen :config (ido-complete-space-or-hyphen-enable))
+    (use-package ido-sort-mtime :config (ido-sort-mtime-mode 1))
+    (use-package flx-ido :config (flx-ido-mode 1))
 
     (use-package ido-vertical-mode
-      :disabled t
-      :config (ido-vertical-mode 1))
-
-    (use-package flx-ido
-      :config (flx-ido-mode 1))
+      :config (progn (ido-vertical-mode 1)
+                     (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+                     (setq ido-vertical-show-count t)))
 
     (use-package ido-load-library
-      :config (defalias 'load-library 'ido-load-library))
+      :defer t
+      :init (defalias 'load-library 'ido-load-library))
+
+    (use-package imenus
+      :defer t
+      :bind ("C-." . imenus))
+
+    (use-package smex
+      :defer t
+      :bind (("M-x" . smex)
+             ("M-X" . smex-major-mode-commands)
+             ("C-c M-x" . execute-extended-command)))
+
+    (use-package ido-occur
+      :config
+      (progn
+        (defun ido-occur-at-point ()
+          "Open ido-occur at point."
+          (interactive)
+          (ido-occur (symbol-name (symbol-at-point))))
+
+        (global-set-key (kbd "C-o") 'ido-occur-at-point)
+
+        (defun ido-occur-from-isearch ()
+          "Open ido-occur from isearch."
+          (interactive)
+          (ido-occur (if isearch-regexp
+                         isearch-string
+                       (regexp-quote isearch-string))))
+
+        (define-key isearch-mode-map (kbd "C-o") 'ido-occur-from-isearch)))
     ))
 
 (provide 'init-ido)

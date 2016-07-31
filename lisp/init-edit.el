@@ -1,7 +1,7 @@
 ;; init-edit.el --- Initialize edit configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -33,8 +33,7 @@
 ;;; Code:
 
 ;; Miscs
-(setq initial-scratch-message nil)
-(delete-selection-mode 1)
+;; (setq initial-scratch-message nil)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets) ; Show path if names are same
 (setq adaptive-fill-regexp "[ t]+|[ t]*([0-9]+.|*+)[ t]*")
 (setq adaptive-fill-first-line-regexp "^* *$")
@@ -43,8 +42,15 @@
 (setq auto-save-default nil)               ; Disable auto save
 ;; (setq-default kill-whole-line t)           ; Kill line including '\n'
 
+(delete-selection-mode 1)
+
+(add-hook 'abbrev-mode-hook '(lambda () (diminish 'abbrev-mode)))
+
 (setq-default major-mode 'text-mode)
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'text-mode-hook
+          '(lambda ()
+             (turn-on-auto-fill)
+             (diminish 'auto-fill-function)))
 
 (setq sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
 (setq sentence-end-double-space nil)
@@ -61,93 +67,126 @@
 
 ;; Encoding
 (set-language-environment 'Chinese-GB18030)
+(set-clipboard-coding-system 'chinese-gb18030)
 (set-keyboard-coding-system 'utf-8)
-(set-clipboard-coding-system 'gbk)
 (set-terminal-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-selection-coding-system 'utf-8)
 (modify-coding-system-alist 'process "*" 'utf-8)
 (setq default-process-coding-system '(utf-8 . utf-8))
-(setq-default pathname-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;; CUA mode
-(use-package cua-base
-  :defer t
+;; Rectangle
+;; (setq cua-enable-cua-keys nil)           ;; don't add C-x,C-c,C-v
+;; (cua-mode t)                             ;; for rectangles, CUA is nice
+
+(use-package hydra
   :config
-  (setq cua-enable-cua-keys nil)           ;; don't add C-x,C-c,C-v
-  (cua-mode t)                             ;; for rectangles, CUA is nice
-  )
+  (progn
+    (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                                         :color pink
+                                         :post (deactivate-mark))
+      "
+  ^_k_^    _d_elete    _s_tring     |\\     _,,,--,,
+_h_   _l_  _o_k        _y_ank       /,`.-'`'   ._  \-;;,-
+  ^_j_^    _n_ew-copy  _r_eset     |,4-  ) )_   .;.(  `'-'
+^^^^       _e_xchange  _u_ndo     '---''( /. )-'( \ )
+^^^^       _p_aste     _q_uit
+"
+      ("h" backward-char nil)
+      ("l" forward-char nil)
+      ("k" previous-line nil)
+      ("j" next-line nil)
+      ("e" exchange-point-and-mark nil)
+      ("n" copy-rectangle-as-kill nil)
+      ("d" delete-rectangle nil)
+      ("r" (if (region-active-p)
+               (deactivate-mark)
+             (rectangle-mark-mode 1)) nil)
+      ("y" yank-rectangle nil)
+      ("u" undo nil)
+      ("s" string-rectangle nil)
+      ("p" kill-rectangle nil)
+      ("o" nil nil)
+      ("q" nil nil)
+      ("C-<return>" nil nil))
+    (global-set-key (kbd "C-<return>") 'hydra-rectangle/body)
+    ))
 
 ;; Automatically reload files was modified by external program
 (use-package autorevert
   :defer t
   :diminish auto-revert-mode
-  :config (global-auto-revert-mode 1))
+  :init (add-hook 'after-init-hook 'global-auto-revert-mode))
 
-;; Ace jump mode
-(use-package ace-jump-mode
+;; Avy
+(use-package avy
   :defer t
-  :bind ("C-c SPC" . ace-jump-mode))
+  :bind (("C-:" . avy-goto-char)
+         ("C-'" . avy-goto-char-2)
+         ("M-g f" . avy-goto-line)
+         ("M-g w" . avy-goto-word-1)
+         ("M-g e" . avy-goto-word-0))
+  :config (avy-setup-default))
+
+;; zzz to char
+(use-package zzz-to-char
+  :defer t
+  :bind (("M-z" . zzz-to-char)))
 
 ;; Ace link
 (use-package ace-link
   :defer t
-  :config (ace-link-setup-default))
+  :init (add-hook 'after-init-hook 'ace-link-setup-default))
 
 ;; Aggressive indent
 (use-package aggressive-indent
   :defer t
   :diminish aggressive-indent-mode
-  :config
-  (global-aggressive-indent-mode 1)
-  (add-to-list 'aggressive-indent-excluded-modes 'web-mode))
+  :init (add-hook 'after-init-hook 'global-aggressive-indent-mode))
 
 ;; Auto indent
 (use-package auto-indent-mode
   :defer t
   :diminish auto-indent-mode
-  :config
-  (setq auto-indent-assign-indent-level-variables nil)
-  (setq auto-indent-indent-style 'conservative)
-  (auto-indent-global-mode 1))
+  :init (progn
+          (setq auto-indent-assign-indent-level-variables nil)
+          (setq auto-indent-indent-style 'conservative)
+          (add-hook 'after-init-hook 'auto-indent-global-mode)))
 
 ;; Anzu mode
 (use-package anzu
   :defer t
   :diminish anzu-mode
-  :bind
-  (("M-%" . anzu-query-replace)
-   ("C-M-%" . anzu-query-replace-regexp))
+  :bind (("M-%" . anzu-query-replace)
+         ("C-M-%" . anzu-query-replace-regexp))
   :config (global-anzu-mode 1))
 
 ;; Mwim
 (use-package mwim
   :defer t
-  :bind
-  (("C-a" . mwim-beginning-of-code-or-line)
-   ("C-e" . mwim-end-of-code-or-line)))
+  :bind (("C-a" . mwim-beginning-of-code-or-line)
+         ("C-e" . mwim-end-of-code-or-line)))
 
 ;; Pager
 (use-package pager
   :defer t
   :commands pager-page-down pager-page-up pager-row-down pager-row-up
-  :bind
-  (("\C-v"    . pager-page-down)
-   ([next]    . pager-page-down)
-   ("\ev"     . pager-page-up)
-   ([prior]   . pager-page-up)
-   ([M-up]   . pager-row-up)
-   ([M-kp-8] . pager-row-up)
-   ([M-down] . pager-row-down)
-   ([M-kp-2] . pager-row-down)))
+  :bind (("\C-v"    . pager-page-down)
+         ([next]    . pager-page-down)
+         ("\ev"     . pager-page-up)
+         ([prior]   . pager-page-up)
+         ([M-up]   . pager-row-up)
+         ([M-kp-8] . pager-row-up)
+         ([M-down] . pager-row-down)
+         ([M-kp-2] . pager-row-down)))
 
 ;; Move text
 (use-package move-text
   :defer t
-  :config (move-text-default-bindings))
+  :init (add-hook 'after-init-hook 'move-text-default-bindings))
 
 ;; Comment
 (use-package comment-dwim-2
@@ -157,32 +196,59 @@
 ;; IEdit
 (use-package iedit
   :defer t
-  :bind
-  (("C-;" . iedit-mode)
-   ("C-x r RET" . iedit-rectangle-mode)))
+  :bind (("C-;" . iedit-mode)
+         ("C-x r RET" . iedit-rectangle-mode)))
 
 ;; Back button
 (use-package back-button
   :defer t
   :diminish back-button-mode
-  :config (back-button-mode 1))
+  :init (add-hook 'after-init-hook 'back-button-mode))
 
 ;; Undo Tree
 (use-package undo-tree
   :defer t
   :diminish undo-tree-mode
-  :config (global-undo-tree-mode 1))
+  :init (add-hook 'after-init-hook 'global-undo-tree-mode))
 
 ;; Multiple cursors
 (use-package multiple-cursors
   :defer t
-  :bind
-  (("C-S-c C-S-c" . mc/edit-lines)
-   ("C->" . mc/mark-next-like-this)
-   ("C-<". mc/mark-previous-like-this)
-   ("C-c C-<". mc/mark-all-like-this)
-   ("M-<mouse-1>" . mc/add-cursor-on-click)
-   ("M-<down-mouse-1>" . mc/add-cursor-on-click)))
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<". mc/mark-previous-like-this)
+         ("C-c C-<". mc/mark-all-like-this)
+         ("M-<mouse-1>" . mc/add-cursor-on-click)
+         ("M-<down-mouse-1>" . mc/add-cursor-on-click))
+  :config
+  (progn
+    (use-package hydra
+      :config
+      (progn
+        (defhydra multiple-cursors-hydra (:color pink :hint nil)
+          "
+     ^Up^            ^Down^        ^Other^
+ ----------------------------------------------
+ [_p_]   Next    [_n_]   Next    [_l_] Edit lines
+ [_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+ [_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
+ ^ ^             ^ ^             [_q_] Quit
+"
+          ("l" mc/edit-lines :exit t)
+          ("a" mc/mark-all-like-this :exit t)
+          ("n" mc/mark-next-like-this)
+          ("N" mc/skip-to-next-like-this)
+          ("M-n" mc/unmark-next-like-this)
+          ("p" mc/mark-previous-like-this)
+          ("P" mc/skip-to-previous-like-this)
+          ("M-p" mc/unmark-previous-like-this)
+          ("r" mc/mark-all-in-region-regexp :exit t)
+          ("<mouse-1>" mc/add-cursor-on-click)
+          ("<down-mouse-1>" ignore)
+          ("<drag-mouse-1>" ignore)
+          ("q" nil))
+        (global-set-key (kbd "C-S-c") 'multiple-cursors-hydra/body)
+        ))))
 
 ;; Expand region
 (use-package expand-region
@@ -195,26 +261,28 @@
   :diminish subword-mode
   :init (add-hook 'prog-mode-hook 'subword-mode))
 
-;; Smartparens
-(use-package smartparens
-  :diminish smartparens-mode
+;; Origami code floding
+(use-package origami
+  :defer t
+  :init (add-hook 'after-init-hook 'global-origami-mode)
   :config
-  (require 'smartparens-config)
-  (smartparens-global-mode 1)
-  (show-smartparens-global-mode 1))
-
-;; Swoop
-(unless (featurep 'helm)
-  (use-package swoop
-    :defer t
-    :init
-    (setq swoop-font-size-change: nil)
-    :bind
-    (("C-o" . swoop)
-     ("C-M-o" . swoop-multi)
-     ("M-o" . swoop-pcre-regexp)
-     ("C-S-o" . swoop-back-to-last-position)))
-  )
+  (use-package hydra
+    :config
+    (progn
+      (defhydra hydra-folding (:color pink)
+        "
+  _o_pen node    _n_ext fold       toggle _f_orward
+  _c_lose node   _p_revious fold   toggle _a_ll     _q_uit
+"
+        ("o" origami-open-node)
+        ("c" origami-close-node)
+        ("n" origami-next-fold)
+        ("p" origami-previous-fold)
+        ("f" origami-forward-toggle-node)
+        ("a" origami-toggle-all-nodes)
+        ("q" nil))
+      (global-set-key (kbd "C-S-f") 'hydra-folding/body)
+      )))
 
 (provide 'init-edit)
 

@@ -1,7 +1,7 @@
 ;; init-yasnippet.el --- Initialize yasnippet configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -33,17 +33,21 @@
 ;;; Code:
 
 (use-package yasnippet
+  :defer t
   :diminish yas-minor-mode
+  :init
+  (progn
+    (setq yas-verbosity 0)                  ; Suppress messages
+    (add-hook 'after-init-hook 'yas-global-mode)
+    (setq yas-prompt-functions '(yas-dropdown-prompt
+                                 yas-maybe-ido-prompt
+                                 yas-completing-prompt))
+    )
   :config
-  (setq yas-verbosity 0)                  ; Suppress messages
-  (yas-global-mode 1)
-
   (use-package dropdown-list
     :defer t
     :commands dropdown-list)
-  (setq yas-prompt-functions '(yas-dropdown-prompt
-                               yas-ido-prompt
-                               yas-completing-prompt)))
+  )
 
 (provide 'init-yasnippet)
 

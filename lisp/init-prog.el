@@ -1,7 +1,7 @@
 ;; init-prog.el --- Initialize prog configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -32,9 +32,24 @@
 ;;
 ;;; Code:
 
+;; Robot mode: located in site-lisp
+(autoload 'robot-mode "robot-mode")
+(add-to-list 'auto-mode-alist '("\\.robot\\'" . robot-mode))
+(eval-after-load 'aggressive-indent
+  '(add-to-list 'aggressive-indent-excluded-modes 'robot-mode))
+
 (use-package markdown-mode :defer t)
 (use-package powershell :defer t)
 (use-package csharp-mode :defer t)
+(use-package dockerfile-mode :defer t :mode "Dockerfile\\'")
+
+;; Emacs refactoring system
+(use-package emr
+  :defer t
+  :diminish emr-c-mode
+  :bind (:map prog-mode-map
+              ("M-RET" . emr-show-refactor-menu))
+  :init (add-hook 'prog-mode-hook 'emr-initialize))
 
 (provide 'init-prog)
 

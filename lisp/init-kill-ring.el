@@ -1,7 +1,7 @@
 ;; init-kill-ring.el --- Initialize kill-ring configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -36,19 +36,16 @@
 
 (use-package easy-kill
   :defer t
-  :bind ((:map kill-ring-save easy-kill)
-         (:map mark-sexp easy-mark)))
-
-;; Only use with ido
-(eval-after-load 'ido
+  :init
   (progn
-    (use-package browse-kill-ring
-      :defer t
-      :bind ("C-c k" . browse-kill-ring))
-    
-    (use-package popup-kill-ring
-      :defer t
-      :bind ("M-y" . popup-kill-ring))))
+    (global-set-key [remap kill-ring-save] 'easy-kill)
+    (global-set-key [remap mark-sexp] 'easy-mark)
+    ))
+
+(use-package browse-kill-ring
+  :defer t
+  :bind ("C-c k" . browse-kill-ring)
+  :init (add-hook 'after-init-hook 'browse-kill-ring-default-keybindings))
 
 (provide 'init-kill-ring)
 

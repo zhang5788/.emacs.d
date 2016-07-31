@@ -1,7 +1,7 @@
 ;; init-web.el --- Initialize web configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -42,30 +42,56 @@
   :defer t
   :init (setq scss-compile-at-save nil)         ; Disable complilation on save
   )
-;;
-;; JS2 mode
+
+(use-package less-css-mode :defer t)
+
+;; Css eldoc
+(use-package css-eldoc
+  :defer t
+  :init
+  (progn
+    (add-hook 'css-mode-hook 'turn-on-css-eldoc)
+    (add-hook 'scss-mode-hook 'turn-on-css-eldoc)
+    (add-hook 'less-css-mode-hook 'turn-on-css-eldoc)
+    ))
+
+;; Json mode
+(use-package json-mode :defer t)
+
+;; Improved JavaScript editing mode
 (use-package js2-mode
   :defer t
   :mode "\\.js$"
   :interpreter "node"
+  :init (add-hook 'js2-mode-hook
+                  '(lambda ()
+                     (setq js2-basic-offset 2)
+                     (js2-highlight-unused-variables-mode 1)
+                     (js2-imenu-extras-mode 1)))
   :config
-  (add-hook 'js2-mode-hook
-            '(lambda ()
-               (setq js-indent-level 2)
-               (js2-imenu-extras-mode 1)
-               (ac-js2-mode 1)))
-  )
+  (progn
+    (use-package js2-refactor
+      :defer t
+      :diminish js2-refactor-mode
+      :init (add-hook 'js2-mode-hook #'js2-refactor-mode)
+      :config (js2r-add-keybindings-with-prefix "C-c C-m"))
 
-;; Coffee mode
+    (eval-after-load 'auto-complete
+      '(use-package ac-js2
+         :defer t
+         :init (add-hook 'js2-mode-hook 'ac-js2-mode 1)))
+    ))
+
+;; Major mode for CoffeeScript code
 (use-package coffee-mode
   :defer t
-  :config (setq coffee-tab-width 2))
+  :init (setq coffee-tab-width 2))
 
-;; Web mode
+;; Major mode for editing web templates
 (use-package web-mode
   :defer t
   :mode "\\.\\(phtml\\|php|[gj]sp\\|as[cp]x\\|erb\\|djhtml\\|html?\\)$"
-  :defines ac-modes
+  :defines ac-modes aggressive-indent-excluded-modes
   :config
   (progn
     (setq web-mode-markup-indent-offset 2)
@@ -75,24 +101,41 @@
     (eval-after-load 'auto-complete
       '(add-to-list 'ac-modes 'web-mode))
 
-    ;; Workaround for auto-paring issues for Rails and Django
-    (eval-after-load 'smartparens
-      (add-hook 'web-mode-hook
-                '(lambda ()
-                   (sp-local-pair 'web-mode "{" "}" :actions nil)
-                   (sp-local-pair 'web-mode "<" ">" :actions nil))))
+    (eval-after-load 'aggressvie-indent
+      '(add-to-list 'aggressive-indent-excluded-modes 'web-mode))
     ))
 
-;; Web beautify
+;; Live browser JavaScript, CSS, and HTML interaction
+(use-package skewer-mode
+  :defer t
+  :diminish skewer-mode
+  :init
+  (progn
+    (eval-after-load 'js2-mode
+      '(add-hook 'js2-mode-hook 'skewer-mode))
+    (eval-after-load 'css-mode
+      '(add-hook 'css-mode-hook 'skewer-css-mode))
+    (eval-after-load 'sgml-mode
+      '(add-hook 'html-mode-hook 'skewer-html-mode))
+    ))
+
+;; Format HTML, CSS and JavaScript/JSON by js-beautify
 (use-package web-beautify
   :defer t
-  :bind
-  ((:map js2-mode-map ("C-c C-b" . web-beautify-js))
-   (:map json-mode-map "C-c C-b" . web-beautify-js)
-   (:map sgml-mode-map "C-c C-b" . web-beautify-html)
-   (:map css-mode-map "C-c C-b" . web-beautify-css)))
+  :init
+  (progn
+    (eval-after-load 'js2-mode
+      '(define-key js2-mode-map (kbd "C-c C-b") 'web-beautify-js))
+    (eval-after-load 'json-mode
+      '(define-key json-mode-map (kbd "C-c C-b") 'web-beautify-js))
+    (eval-after-load 'sgml-mode
+      '(define-key html-mode-map (kbd "C-c C-b") 'web-beautify-html))
+    (eval-after-load 'css-mode
+      '(define-key css-mode-map (kbd "C-c C-b") 'web-beautify-css)))
+  :config
+  (setq web-beautify-args '("-s" "2" "-f" "-")) ; Set indent size to 2
+  )
 
-(use-package less-css-mode :defer t)
 (use-package haml-mode :defer t)
 (use-package php-mode :defer t)
 

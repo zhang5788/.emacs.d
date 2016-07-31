@@ -1,7 +1,7 @@
 ;; init-ui.el --- Initialize ui configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -34,11 +34,6 @@
 
 (require 'init-const)
 
-;; Menu/Tool/Scroll bars
-(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-
 ;; Title
 (setq frame-title-format
       '("GNU Emacs " emacs-version "@" user-login-name " : "
@@ -47,34 +42,58 @@
                  "%b"))))
 (setq icon-title-format frame-title-format)
 
-;; Theme
-(use-package monokai-theme
-  :config (load-theme 'monokai t))
+;; Menu/Tool/Scroll bars
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(when (fboundp 'horizontal-scroll-bar-mode) (horizontal-scroll-bar-mode -1))
 
-;; Spaceline
-(use-package spaceline
-  :config
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme))
+;; Yet Another Scroll Bar Mode
+(use-package yascroll
+  :defer t
+  :init (add-hook 'window-setup-hook 'global-yascroll-bar-mode))
+
+;; Modeline configuration
+(use-package spaceline-config
+  :ensure spaceline
+  :defer t
+  :commands spaceline-emacs-theme spaceline-helm-mode
+  :init (add-hook 'after-init-hook
+                  '(lambda ()
+                     (spaceline-emacs-theme)
+                     (eval-after-load 'helm (spaceline-helm-mode 1))
+                     )))
+
+;; Color theme
+(use-package monokai-theme
+  :defer t
+  :init
+  (progn
+    (add-hook 'after-init-hook '(lambda () (load-theme 'monokai t)))
+
+    ;; FIX: Invalid font in org-mode on Windows
+    ;; https://github.com/oneKelvinSmith/monokai-emacs/issues/56
+    (when (and sys/win32p (> emacs-major-version 24))
+      (add-hook 'window-setup-hook '(lambda () (load-theme 'monokai t))))
+    ))
 
 ;; Fonts
 (use-package chinese-fonts-setup
+  :defines cfs--current-profile-name
   :config
   (progn
+    ;; (if sys/macp
+    ;;     (setq cfs--fontsize-steps '(6 6 8)))
     (setq cfs-profiles
           '("program" "org-mode" "read-book"))
     (setq cfs--current-profile-name "program")
-    ;; (if sys/macp
-    ;;     (setq cfs--fontsize-steps '(6 6 8)))
     ))
 
 ;; Line and Column
 (setq-default fill-column 80)
 (setq column-number-mode t)
 (setq line-number-mode t)
-;; (global-linum-mode 1)
-(add-hook 'text-mode-hook 'linum-mode)
-(add-hook 'prog-mode-hook 'linum-mode)
+(use-package linum-off :config (global-linum-mode 1))
 
 ;; Mouse & Smooth Scroll
 ;; scroll one line at a time (less "jumpy" than defaults)
@@ -86,28 +105,25 @@
 
 (use-package smooth-scrolling
   :defer t
-  :config
-  (smooth-scrolling-mode 1)
-  (setq-default smooth-scroll-margin 0))
+  :init (add-hook 'after-init-hook 'smooth-scrolling-mode)
+  :config (setq smooth-scroll-margin 0))
 
 ;; Display Time
 (use-package time
-  :config
-  (setq display-time-24hr-format t)
-  (setq display-time-day-and-date t)
-  (display-time-mode 1))
-
+  :defer t
+  :init (add-hook 'window-setup-hook 'display-time-mode)
+  :config (progn (setq display-time-24hr-format t)
+                 (setq display-time-day-and-date t)))
 ;; Misc
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq inhibit-startup-screen t)
-;; (setq visible-bell t)
+(setq visible-bell t)
 (setq-default ns-pop-up-frames nil)             ; Don't open a file in a new frame
 (size-indication-mode 1)
-(blink-cursor-mode -1)
-(show-paren-mode 1)
+;; (blink-cursor-mode -1)
+(unless (featurep 'smartparens) (show-paren-mode 1))
 (setq track-eol t)                         ; Keep cursor at end of lines. Require line-move-visual is nil.
 (setq line-move-visual nil)
-(ansi-color-for-comint-mode-on)
 
 (provide 'init-ui)
 

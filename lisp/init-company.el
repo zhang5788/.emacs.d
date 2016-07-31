@@ -1,7 +1,7 @@
 ;; init-company.el --- Initialize company configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -35,21 +35,55 @@
 (use-package company
   :defer t
   :diminish company-mode
+  :bind (("M-/" . company-complete))
   :init (add-hook 'after-init-hook 'global-company-mode)
   :config
   (progn
     (use-package company-quickhelp
       :defer t
-      :bind (:map company-active-map ("M-h" . company-quickhelp-manual-begin))
-      :config (company-quickhelp-mode 1))
+      :bind (("C-c v" . company-yasnippet)
+             :map company-active-map
+             ("M-h" . company-quickhelp-manual-begin)
+             ("C-n" . company-select-next)
+             ("C-p" . company-select-previous))
+      :init (add-hook 'company-mode-hook 'company-quickhelp-mode))
 
     (use-package company-flx
       :defer t
-      :config (company-flx-mode 1))
+      :init (add-hook 'company-mode-hook 'company-flx-mode))
+
+    (use-package company-statistics
+      :defer t
+      :init (add-hook 'company-mode-hook 'company-statistics-mode))
+
+    (use-package company-c-headers
+      :defer t
+      :init (push 'company-c-headers company-backends))
+
+    (use-package company-web
+      :defer t
+      :init (progn (add-to-list 'company-backends 'company-web-html)
+                   (add-to-list 'company-backends 'company-web-jade)
+                   (add-to-list 'company-backends 'company-web-slim)))
 
     (use-package company-shell
       :defer t
-      :init (add-to-list 'company-backends '(company-shell company-fish-shell)))
+      :init (progn (push 'company-shell company-backends)
+                   (push 'company-fish-shell company-backends)))
+
+    ;; Support yas in commpany
+    ;; Note: Must be the last to involve all backends
+    (defvar company-mode/enable-yas t
+      "Enable yasnippet for all backends.")
+
+    (defun company-mode/backend-with-yas (backend)
+      (if (or (not company-mode/enable-yas)
+              (and (listp backend) (member 'company-yasnippet backend)))
+          backend
+        (append (if (consp backend) backend (list backend))
+                '(:with company-yasnippet))))
+
+    (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
     ))
 
 (provide 'init-company)

@@ -1,7 +1,7 @@
 ;;; init-package.el --- Initialize package configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -32,22 +32,29 @@
 ;;
 ;;; Code:
 
-(package-initialize)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+;; ELPA: refer to https://elpa.emacs-china.org/
+
+;; Official
+;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 ;; (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+
+;; Mirror
+(setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+
+(package-initialize)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
-(use-package use-package
-  :config (setq use-package-always-ensure t))
+(use-package use-package :init (setq use-package-always-ensure t))
 
 (use-package paradox
   :defer t
-  :config
-  (setq paradox-github-token t)
-  (setq paradox-execute-asynchronously t))
+  :config (progn
+            (setq paradox-github-token t)
+            (setq paradox-execute-asynchronously t)))
 
 (provide 'init-package)
 

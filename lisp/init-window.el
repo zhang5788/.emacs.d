@@ -1,7 +1,7 @@
 ;; init-window.el --- Initialize window configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
-;; Version: 1.0.0
+;; Version: 2.0.0
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -32,25 +32,46 @@
 ;;
 ;;; Code:
 
-;; Switch window
-(use-package switch-window
-  :defer t
-  :bind ("C-x o" . switch-window))
-
+;; Directional window-selection routines
 (use-package windmove
   :defer t
-  :config (windmove-default-keybindings))
+  :init (add-hook 'window-setup-hook 'windmove-default-keybindings))
 
+;; Restore old window configurations
 (use-package winner
   :defer t
-  :config (winner-mode 1))
+  :init (add-hook 'window-setup-hook 'winner-mode))
 
-;; Zoom window
+;; Quickly switch windows
+(use-package ace-window
+  :defer t
+  :bind ("C-x o" . ace-window))
+
+;; Zoom window like tmux
 (use-package zoom-window
   :defer t
   :bind ("C-x C-z" . zoom-window-zoom)
+  :init (setq zoom-window-mode-line-color "DarkGreen"))
+
+;; Popup Window Manager
+(use-package popwin
+  :defer t
+  :commands popwin-mode
+  :init (add-hook 'after-init-hook 'popwin-mode)
   :config
-  (setq zoom-window-mode-line-color "DarkGreen"))
+  (progn
+    ;; (global-set-key (kbd "C-z") popwin:keymap)
+
+    ;; Support browse-kill-ring
+    (eval-after-load 'browse-kill-ring
+      '(progn
+         (defun popwin-bkr:update-window-reference ()
+           (popwin:update-window-reference 'browse-kill-ring-original-window :safe t))
+
+         (add-hook 'popwin:after-popup-hook 'popwin-bkr:update-window-reference)
+
+         (push "*Kill Ring*" popwin:special-display-config)))
+    ))
 
 (provide 'init-window)
 

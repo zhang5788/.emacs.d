@@ -1,3 +1,4 @@
+*.bak
 *.elc
 ido.*
 session*
@@ -24,3 +25,11 @@ flycheck_*.el
 *.log
 /tramp
 eshell/
+/custom.el
+tmp*
+/.mc-lists.el
+/company-statistics-cache.el
+/games/
+/persp-confs/
+/tutorial/
+/.agignore

@@ -1,14 +1,15 @@
-;;; init.el --- my personal emacs configuration
+;;; init.el --- user init configuration.     -*- no-byte-compile: t -*-
 ;;
 ;; Filename: init.el
 ;; Description:
 ;; Author: Vincent Zhang
+;; Version: 2.0.0
 ;; Maintainer:
 ;; Created: Wed Nov 29 00:57:38 2006
 ;; Version:
-;; Last-Updated: Fri Jan 30 08:00:00 2016 (+0800)
+;; Last-Updated: Fri May 30 08:00:00 2016 (+0800)
 ;;           By: Vincent Zhang
-;;     Update #: 4000
+;;     Update #: 6000
 ;; URL: https://github.com/seagle0128/.emacs.d
 ;; Keywords:
 ;; Compatibility:
@@ -45,15 +46,27 @@
 ;;
 ;;; Code:
 
+(unless (>= emacs-major-version 24)
+  (error "This requires Emacs 24 or later!"))
+
+(setq gc-cons-threshold 10000000)
+(setq load-prefer-newer t)
+
 ;; Load path
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 
+;; Customization
+(require 'init-custom)
+
 ;; Packages
+;; Without this comment Emacs25 adds (package-initialize) here
+;; (package-initialize)
 (require 'init-package)
 
+;; Benchmark
 (use-package benchmark-init
-  :disabled t
+  :if my-profile-enable
   :config (benchmark-init/activate))
 
 ;; Preferences
@@ -61,12 +74,18 @@
 (require 'init-ui)
 
 (require 'init-edit)
-(require 'init-recentf)
+(require 'init-smartparens)
 (require 'init-ibuffer)
 (require 'init-kill-ring)
 
-;; (require 'init-ido)
-(require 'init-helm)
+(cond
+ ((eq my-completion-method 'helm)
+  (require 'init-helm))
+ ((eq my-completion-method 'ivy)
+  (require 'init-ivy))
+ ((eq my-completion-method 'ido)
+  (require 'init-ido))
+ )
 
 (require 'init-calendar)
 (require 'init-bookmark)
@@ -74,10 +93,14 @@
 (require 'init-window)
 
 (require 'init-yasnippet)
-(require 'init-company)
-;; (require 'init-auto-complete)
 
-(require 'init-term)
+(cond
+ ((eq my-ac-method 'company)
+  (require 'init-company))
+ ((eq my-ac-method 'auto-complete)
+  (require 'init-auto-complete))
+ )
+
 (require 'init-shell)
 (require 'init-eshell)
 
@@ -87,7 +110,6 @@
 (require 'init-scm)
 (require 'init-projectile)
 (require 'init-flycheck)
-(require 'init-imenu)
 (require 'init-tags)
 
 (require 'init-emacs-lisp)
@@ -102,7 +124,8 @@
 (require 'init-org)
 
 ;; Restore
-(require 'init-restore)
+(if my-desktop-restore
+    (require 'init-restore))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here
