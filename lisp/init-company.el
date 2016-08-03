@@ -35,18 +35,27 @@
 (use-package company
   :defer t
   :diminish company-mode
-  :bind (("M-/" . company-complete))
+  :bind (("M-/" . company-complete)
+         ("C-c v" . company-yasnippet))
   :init (add-hook 'after-init-hook 'global-company-mode)
   :config
   (progn
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+
     (use-package company-quickhelp
       :defer t
-      :bind (("C-c v" . company-yasnippet)
-             :map company-active-map
-             ("M-h" . company-quickhelp-manual-begin)
-             ("C-n" . company-select-next)
-             ("C-p" . company-select-previous))
-      :init (add-hook 'company-mode-hook 'company-quickhelp-mode))
+      :if (display-graphic-p)
+      :bind (:map company-active-map
+                  ("M-h" . company-quickhelp-manual-begin))
+      :init
+      (progn
+        (add-hook 'company-mode-hook 'company-quickhelp-mode)
+        (add-hook 'window-setup-hook
+                  '(lambda ()
+                     (setq pos-tip-foreground-color "#F8F8F2"
+                           pos-tip-background-color "#49483E")))
+        ))
 
     (use-package company-flx
       :defer t

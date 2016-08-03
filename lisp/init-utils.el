@@ -74,13 +74,6 @@
          ([C-f12] . neotree-toggle))
   :init (add-hook 'neotree-mode-hook '(lambda () (linum-mode -1))))
 
-;; Perspectives
-(use-package persp-mode
-  :defer t
-  :init (progn (setq persp-nil-name "main")               ; Do not use "none"
-               (setq persp-keymap-prefix (kbd "C-c C-p")) ; Avoid conflict with projectile
-               (add-hook 'after-init-hook 'persp-mode)))
-
 ;; Dash
 (use-package dash-at-point
   :defer t
@@ -98,9 +91,15 @@
 (use-package ack :defer t :if (executable-find "ack"))
 (use-package ag :defer t :if (executable-find "ag"))
 
+;; Junk file
+(use-package open-junk-file
+  :defer t
+  :commands open-junk-file)
+
 ;; Misc
 (use-package htmlize :defer t)
 (use-package list-environment :defer t)
+(use-package memory-usage :defer t)
 
 (provide 'init-utils)
 
