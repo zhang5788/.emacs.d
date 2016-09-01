@@ -45,12 +45,11 @@
          ([f3] . highlight-symbol-next)
          ([S-f3] . highlight-symbol-prev)
          ([M-f3] . highlight-symbol-query-replace))
-  :init
-  (progn
-    (add-hook 'find-file-hook 'highlight-symbol-mode)
-    (add-hook 'find-file-hook 'highlight-symbol-nav-mode)
-    (setq highlight-symbol-idle-delay 0)
-    ))
+  :init (progn
+          (add-hook 'find-file-hook 'highlight-symbol-mode)
+          (add-hook 'find-file-hook 'highlight-symbol-nav-mode)
+          (setq highlight-symbol-idle-delay 0)
+          ))
 
 ;; Highlight indentions
 (use-package highlight-indentation
@@ -65,6 +64,7 @@
 ;; Colorize color names in buffers
 (use-package rainbow-mode
   :defer t
+  :pin gnu
   :diminish rainbow-mode
   :init (add-hook 'prog-mode-hook 'rainbow-mode))
 
@@ -81,6 +81,7 @@
 ;; Highlight TODO/FIXME/BUG
 (use-package fic-mode
   :defer t
+  :pin melpa
   :init (add-hook 'prog-mode-hook 'fic-mode))
 
 ;; Highlight uncommitted changes
@@ -97,6 +98,7 @@
 (use-package volatile-highlights
   :defer t
   :diminish volatile-highlights-mode
+  :commands volatile-highlights-mode
   :init (add-hook 'after-init-hook 'volatile-highlights-mode))
 
 ;; Visualize TAB, (HARD) SPACE, NEWLINE

@@ -37,6 +37,12 @@
 (use-package csharp-mode :defer t)
 (use-package dockerfile-mode :defer t :mode "Dockerfile\\'")
 
+(use-package dos
+  :defer t
+  :pin melpa
+  :init (add-to-list 'auto-mode-alist
+                     '("\\.\\(cmd\\|bat\\|btm\\)$" . dos-mode)))
+
 (use-package editorconfig
   :defer t
   :init (add-hook 'prog-mode-hook 'editorconfig-mode))

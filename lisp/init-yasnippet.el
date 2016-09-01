@@ -40,6 +40,7 @@
   (progn
     (use-package dropdown-list
       :defer t
+      :pin melpa
       :commands dropdown-list)
 
     (setq yas-prompt-functions '(yas-dropdown-prompt

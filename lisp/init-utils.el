@@ -92,6 +92,7 @@
 ;; Dash
 (use-package dash-at-point
   :defer t
+  :pin melpa
   :if sys/macp
   :bind (("\C-cd" . dash-at-point)
          ("\C-ce" . dash-at-point-with-docset)))
@@ -121,18 +122,20 @@
     ))
 
 ;; Search
-(use-package ack :defer t :if (executable-find "ack"))
+(use-package ack :defer t :pin gnu :if (executable-find "ack"))
 (use-package ag :defer t :if (executable-find "ag"))
 
 ;; Junk file
 (use-package open-junk-file
   :defer t
+  :pin melpa
   :commands open-junk-file)
 
 ;; Misc
-(use-package htmlize :defer t)
-(use-package list-environment :defer t)
-(use-package memory-usage :defer t)
+(use-package htmlize :defer t :pin melpa)
+(use-package list-environment :defer t :pin melpa)
+(use-package memory-usage :defer t :pin gnu)
+(use-package eyedropper :defer t :pin melpa)
 
 (provide 'init-utils)
 

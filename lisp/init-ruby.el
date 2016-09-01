@@ -56,6 +56,7 @@
 
     (use-package ruby-refactor
       :defer t
+      :pin melpa
       :diminish ruby-refactor-mode
       :init (add-hook 'ruby-mode-hook 'ruby-refactor-mode-launch))
 
@@ -95,6 +96,7 @@
     ;; Yari
     (use-package yari
       :defer t
+      :pin melpa
       :bind (:map ruby-mode-map ([f1] . yari))
       :config
       (eval-after-load 'helm
@@ -103,6 +105,7 @@
     ;; Yard mode
     (use-package yard-mode
       :defer t
+      :pin melpa
       :diminish yard-mode
       :init (add-hook 'ruby-mode-hook 'yard-mode))
     ))

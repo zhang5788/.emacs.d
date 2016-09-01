@@ -76,6 +76,7 @@
 
 ;; Benchmark
 (use-package benchmark-init
+  :pin melpa
   :if my-profile-enable
   :config (benchmark-init/activate))
 
@@ -124,7 +125,6 @@
 
 (require 'init-emacs-lisp)
 (require 'init-c)
-(require 'init-dos)
 (require 'init-python)
 (require 'init-ruby)
 (require 'init-web)

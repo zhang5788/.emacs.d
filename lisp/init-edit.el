@@ -143,6 +143,7 @@
 ;; Windows-scroll commands
 (use-package pager
   :defer t
+  :pin melpa
   :commands pager-page-down pager-page-up pager-row-down pager-row-up
   :bind (("\C-v"   . pager-page-down)
          ([next]   . pager-page-down)
@@ -182,6 +183,7 @@
 ;; Treat undo history as a tree
 (use-package undo-tree
   :defer t
+  :pin gnu
   :diminish undo-tree-mode
   :init (add-hook 'after-init-hook 'global-undo-tree-mode))
 

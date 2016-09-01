@@ -36,6 +36,7 @@
 ;; `pC' can show lunar details
 (use-package cal-china-x
   :defer t
+  :pin melpa
   :commands cal-china-x-setup
   :init (add-hook 'after-init-hook 'cal-china-x-setup)
   :config

@@ -94,6 +94,7 @@
 
     (use-package counsel-projectile
       :defer t
+      :pin melpa
       :bind (("C-S-t" . counsel-projectile-find-file))
       :init (setq projectile-switch-project-action 'counsel-projectile-find-file))
     ))

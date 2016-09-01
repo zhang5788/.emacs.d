@@ -48,6 +48,7 @@
 ;; Css eldoc
 (use-package css-eldoc
   :defer t
+  :pin melpa
   :commands turn-on-css-eldoc
   :init (dolist (hook '(css-mode-hook scss-mode-hook less-css-mode-hook))
           (add-hook hook 'turn-on-css-eldoc)))

@@ -87,7 +87,10 @@
     ))
 
 ;; Multi term
-(use-package multi-term :defer t :if (not sys/win32p))
+(use-package multi-term
+  :defer t
+  :pin melpa
+  :if (not sys/win32p))
 
 ;; Shell Pop
 (use-package shell-pop

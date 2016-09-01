@@ -81,6 +81,7 @@
 ;; Fonts
 (use-package chinese-fonts-setup
   :defer t
+  :pin melpa
   :commands chinese-fonts-setup-enable
   :defines cfs--current-profile-name
   :init (add-hook 'emacs-startup-hook
@@ -100,7 +101,7 @@
 (setq-default fill-column 80)
 (setq column-number-mode t)
 (setq line-number-mode t)
-(use-package linum-off :config (global-linum-mode 1))
+(use-package linum-off :pin melpa :config (global-linum-mode 1))
 
 ;; Mouse & Smooth Scroll
 ;; scroll one line at a time (less "jumpy" than defaults)

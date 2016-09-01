@@ -88,6 +88,7 @@
 
     ;; plugins
     (use-package helm-flx
+      :pin melpa
       :config (helm-flx-mode 1))
 
     (use-package helm-descbinds

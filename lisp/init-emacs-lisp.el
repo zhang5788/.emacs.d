@@ -64,8 +64,8 @@
 ;; Interactive macro expander
 (use-package macrostep
   :defer t
-  :bind (:map emacs-lisp-mode-map
-              ("C-c e" . macrostep-expand)))
+  :bind (:map emacs-lisp-mode-map ("C-c e" . macrostep-expand)
+              :map lisp-interaction-mode-map ("C-c e" . macrostep-expand)))
 
 ;; Describe symbol at point
 (defun my-describe-symbol-at-point (symbol)

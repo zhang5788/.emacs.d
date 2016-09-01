@@ -53,6 +53,7 @@
 
     (use-package avy-flycheck
       :defer t
+      :pin melpa
       :init (add-hook 'flycheck-mode-hook 'avy-flycheck-setup))
     ))
 

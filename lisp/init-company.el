@@ -66,16 +66,19 @@
     ;; Flx based fuzzy matching for company
     (use-package company-flx
       :defer t
+      :pin melpa
       :init (add-hook 'company-mode-hook 'company-flx-mode))
 
     ;; Sort candidates using completion history
     (use-package company-statistics
       :defer t
+      :pin gnu
       :init (add-hook 'company-mode-hook 'company-statistics-mode))
 
     ;; Company mode backend for C/C++ header files
     (use-package company-c-headers
       :defer t
+      :pin melpa
       :init (push 'company-c-headers company-backends))
 
     ;; Complete for web,html,emmet,jade,slim modes
@@ -88,6 +91,7 @@
     ;; Company mode backend for shell functions
     (use-package company-shell
       :defer t
+      :pin melpa
       :init (progn (push 'company-shell company-backends)
                    (push 'company-fish-shell company-backends)))
 
