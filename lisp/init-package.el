@@ -53,12 +53,12 @@
 
 (eval-when-compile (require 'use-package))
 (setq use-package-enable-imenu-support t)
-(setq use-package-always-ensure t)
 (setq use-package-expand-minimally t)
+(setq use-package-always-ensure t)
+(setq use-package-always-defer t)
 (setq use-package-always-pin "melpa-stable")
 
 (use-package paradox
-  :defer t
   :config (progn
             (setq paradox-github-token t)
             (setq paradox-execute-asynchronously t)))

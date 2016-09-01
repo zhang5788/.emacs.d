@@ -33,7 +33,6 @@
 ;;; Code:
 
 (use-package ctags-update
-  :defer t
   :diminish ctags-auto-update-mode
   :bind ("\C-cE" . ctags-update)
   :init (add-hook 'c-mode-common-hook 'turn-on-ctags-auto-update-mode))

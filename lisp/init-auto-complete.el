@@ -33,7 +33,6 @@
 ;;; Code:
 
 (use-package auto-complete
-  :defer t
   :diminish auto-complete-mode
   :functions ac-set-trigger-key
   :bind (("M-/" . ac-start))

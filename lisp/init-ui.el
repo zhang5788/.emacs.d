@@ -51,7 +51,6 @@
 ;; Modeline configuration
 (use-package spaceline-config
   :ensure spaceline
-  :defer t
   :commands spaceline-spacemacs-theme spaceline-emacs-theme spaceline-helm-mode
   :init
   (add-hook 'after-init-hook
@@ -61,7 +60,6 @@
 
 ;; Color theme
 (use-package monokai-theme
-  :defer t
   :init
   (progn
     (defun load-monokai-theme()
@@ -80,7 +78,6 @@
 
 ;; Fonts
 (use-package chinese-fonts-setup
-  :defer t
   :pin melpa
   :commands chinese-fonts-setup-enable
   :defines cfs--current-profile-name
@@ -101,7 +98,11 @@
 (setq-default fill-column 80)
 (setq column-number-mode t)
 (setq line-number-mode t)
-(use-package linum-off :pin melpa :config (global-linum-mode 1))
+
+(use-package linum-off
+  :pin melpa
+  :demand
+  :config (global-linum-mode 1))
 
 ;; Mouse & Smooth Scroll
 ;; scroll one line at a time (less "jumpy" than defaults)
@@ -112,13 +113,11 @@
       scroll-conservatively 100000)
 
 (use-package smooth-scrolling
-  :defer t
   :init (add-hook 'after-init-hook 'smooth-scrolling-mode)
   :config (setq smooth-scroll-margin 0))
 
 ;; Display Time
 (use-package time
-  :defer t
   :init (add-hook 'window-setup-hook 'display-time-mode)
   :config (progn (setq display-time-24hr-format t)
                  (setq display-time-day-and-date t)))

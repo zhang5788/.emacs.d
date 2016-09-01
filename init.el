@@ -77,6 +77,7 @@
 ;; Benchmark
 (use-package benchmark-init
   :pin melpa
+  :demand
   :if my-profile-enable
   :config (benchmark-init/activate))
 
@@ -128,7 +129,6 @@
 (require 'init-python)
 (require 'init-ruby)
 (require 'init-web)
-(require 'init-fish)
 (require 'init-prog)
 
 (require 'init-org)

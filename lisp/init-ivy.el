@@ -33,7 +33,6 @@
 ;;; Code:
 
 (use-package counsel
-  :defer t
   :diminish counsel-mode ivy-mode
   :defines magit-completing-read-function
   :bind (("C-s" . swiper)
@@ -89,11 +88,10 @@
                        (insert (format "%s" (with-ivy-window (ivy-thing-at-point)))))
               swiper-map)
 
-    (use-package smex :defer t)
-    (use-package ivy-hydra :defer t)
+    (use-package smex)
+    (use-package ivy-hydra)
 
     (use-package counsel-projectile
-      :defer t
       :pin melpa
       :bind (("C-S-t" . counsel-projectile-find-file))
       :init (setq projectile-switch-project-action 'counsel-projectile-find-file))

@@ -34,12 +34,10 @@
 
 ;; Highlight the current line
 (use-package hl-line
-  :defer t
   :init (add-hook 'after-init-hook 'global-hl-line-mode))
 
 ;; Highlight symbol
 (use-package highlight-symbol
-  :defer t
   :diminish highlight-symbol-mode
   :bind (([C-f3] . highlight-symbol-at-point)
          ([f3] . highlight-symbol-next)
@@ -53,7 +51,6 @@
 
 ;; Highlight indentions
 (use-package highlight-indentation
-  :defer t
   :diminish highlight-indentation-mode highlight-indentation-current-column-mode
   :init (add-hook 'prog-mode-hook 'highlight-indentation-current-column-mode)
   :config
@@ -63,30 +60,25 @@
 
 ;; Colorize color names in buffers
 (use-package rainbow-mode
-  :defer t
   :pin gnu
   :diminish rainbow-mode
   :init (add-hook 'prog-mode-hook 'rainbow-mode))
 
 ;; Highlight brackets according to their depth
 (use-package rainbow-delimiters
-  :defer t
   :init (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
 ;; Color identifiers based on their names
 (use-package color-identifiers-mode
-  :defer t
   :diminish color-identifiers-mode)
 
 ;; Highlight TODO/FIXME/BUG
 (use-package fic-mode
-  :defer t
   :pin melpa
   :init (add-hook 'prog-mode-hook 'fic-mode))
 
 ;; Highlight uncommitted changes
 (use-package diff-hl
-  :defer t
   :init (add-hook 'after-init-hook
                   '(lambda ()
                      (global-diff-hl-mode t)
@@ -96,14 +88,12 @@
 
 ;; Highlight some operations
 (use-package volatile-highlights
-  :defer t
   :diminish volatile-highlights-mode
   :commands volatile-highlights-mode
   :init (add-hook 'after-init-hook 'volatile-highlights-mode))
 
 ;; Visualize TAB, (HARD) SPACE, NEWLINE
 (use-package whitespace
-  :defer t
   :diminish whitespace-mode
   :init (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
           (add-hook hook #'whitespace-mode))

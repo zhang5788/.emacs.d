@@ -34,45 +34,37 @@
 
 ;; Directional window-selection routines
 (use-package windmove
-  :defer t
   :init (add-hook 'window-setup-hook 'windmove-default-keybindings))
 
 ;; Restore old window configurations
 (use-package winner
-  :defer t
   :init (add-hook 'window-setup-hook 'winner-mode))
 
 ;; Quickly switch windows
 (use-package ace-window
-  :defer t
   :bind ("C-x o" . ace-window))
 
 ;; Numbered window shortcuts
 (use-package window-numbering
-  :defer t
   :init (add-hook 'after-init-hook 'window-numbering-mode))
 
 ;; Zoom window like tmux
 (use-package zoom-window
-  :defer t
   :bind ("C-x C-z" . zoom-window-zoom)
   :init (setq zoom-window-mode-line-color "DarkGreen"))
 
 ;; Popup Window Manager
 (use-package popwin
-  :defer t
   :commands popwin-mode
   :init (add-hook 'after-init-hook 'popwin-mode)
   :config (bind-key "C-z" popwin:keymap))
 
 ;; Easy window config switching
 (use-package eyebrowse
-  :defer t
   :init (add-hook 'after-init-hook 'eyebrowse-mode))
 
 ;; Simple window manager for emacs
 (use-package e2wm
-  :defer t
   :bind (("M-+" . e2wm:start-management)))
 
 (provide 'init-window)

@@ -1,4 +1,4 @@
-;;; init-ido.el --- Initialize ido configurations.
+z;;; init-ido.el --- Initialize ido configurations.
 ;;
 ;; Author: Vincent Zhang <seagle0128@gmail.com>
 ;; Version: 2.0.0
@@ -33,7 +33,6 @@
 ;;; Code:
 
 (use-package ido
-  :defer t
   :init (add-hook 'after-init-hook 'ido-mode)
   :config
   (progn
@@ -56,32 +55,45 @@
          (bind-key "C-x C-r" 'ido-recentf-find-file)
          ))
 
-    (use-package ido-ubiquitous :config (ido-ubiquitous-mode 1))
-    (use-package ido-at-point :config (ido-at-point-mode 1))
-    (use-package ido-complete-space-or-hyphen :config (ido-complete-space-or-hyphen-enable))
-    (use-package ido-sort-mtime :config (ido-sort-mtime-mode 1))
-    (use-package flx-ido :config (flx-ido-mode 1))
+    (use-package ido-ubiquitous
+      :demand
+      :config (ido-ubiquitous-mode 1))
+
+    (use-package ido-at-point
+      :demand
+      :config (ido-at-point-mode 1))
+
+    (use-package ido-complete-space-or-hyphen
+      :demand
+      :config (ido-complete-space-or-hyphen-enable))
+
+    (use-package ido-sort-mtime
+      :demand
+      :config (ido-sort-mtime-mode 1))
+
+    (use-package flx-ido
+      :demand
+      :config (flx-ido-mode 1))
 
     (use-package ido-vertical-mode
+      :demand
       :config (progn (ido-vertical-mode 1)
                      (setq ido-vertical-define-keys 'C-n-and-C-p-only)
                      (setq ido-vertical-show-count t)))
 
     (use-package ido-load-library
-      :defer t
       :init (defalias 'load-library 'ido-load-library))
 
     (use-package imenus
-      :defer t
       :bind ("C-." . imenus))
 
     (use-package smex
-      :defer t
       :bind (("M-x" . smex)
              ("M-X" . smex-major-mode-commands)
              ("C-c M-x" . execute-extended-command)))
 
     (use-package ido-occur
+      :demand
       :config
       (progn
         (defun ido-occur-at-point ()

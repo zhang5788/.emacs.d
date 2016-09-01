@@ -34,17 +34,15 @@
 
 ;; Git
 (use-package magit
-  :defer t
   :bind (("C-x g" . magit-status)
          ([f9] . magit-status)))
 
-(use-package git-timemachine :defer t)
-(use-package gitconfig-mode :defer t)
-(use-package gitignore-mode :defer t)
+(use-package git-timemachine)
+(use-package gitconfig-mode)
+(use-package gitignore-mode)
 
 ;; Subversion
 (use-package psvn
-  :defer t
   :pin melpa
   :bind (("C-x p" . svn-status)
          ([C-f9] . svn-status)))

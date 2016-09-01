@@ -40,30 +40,27 @@
 
 ;; Environment
 (use-package exec-path-from-shell
-  :defer t
   :if sys/macp
   :init (add-hook 'after-init-hook 'exec-path-from-shell-initialize))
 
 ;; Start server
 (use-package server
-  :defer t
   :init (add-hook 'after-init-hook 'server-mode))
 
 ;; History
 (if (fboundp 'save-place-mode)
     ;; Emacs 25 has a proper mode for `save-place'
     (use-package saveplace
-      :defer t
       :init (add-hook 'after-init-hook 'save-place-mode))
   ;; <= Emacs 24
-  (use-package saveplace :config (setq save-place t)))
+  (use-package saveplace
+    :demand
+    :config (setq save-place t)))
 
 (use-package recentf
-  :defer t
   :init (add-hook 'after-init-hook 'recentf-mode))
 
 (use-package savehist
-  :defer t
   :init (add-hook 'after-init-hook 'savehist-mode)
   :config (setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring)))
 

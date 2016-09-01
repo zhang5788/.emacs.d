@@ -37,7 +37,6 @@
 (require 'init-const)
 
 (use-package shell
-  :defer t
   :config
   (progn
     (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m)
@@ -75,7 +74,6 @@
 ;; Do not use terminal on Windows
 ;; Term
 (use-package term
-  :defer t
   :if (not sys/win32p)
   :init
   (progn
@@ -88,13 +86,11 @@
 
 ;; Multi term
 (use-package multi-term
-  :defer t
   :pin melpa
   :if (not sys/win32p))
 
 ;; Shell Pop
 (use-package shell-pop
-  :defer t
   :bind ([f8] . shell-pop)
   :init
   (progn

@@ -34,7 +34,6 @@
 
 ;; Visual bookmark
 (use-package bm
-  :defer t
   :bind (;; M$ Visual Studio key setup.
          ("<C-f2>" . bm-toggle)
          ("<f2>" . bm-next)

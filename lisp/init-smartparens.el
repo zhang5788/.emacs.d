@@ -35,7 +35,6 @@
 ;; refer to configurations on
 ;; https://github.com/Fuco1/.emacs.d/blob/master/files/smartparens.el
 (use-package smartparens
-  :defer t
   :diminish smartparens-mode
   :commands sp-with-modes
   :bind (:map smartparens-mode-map
@@ -61,6 +60,7 @@
 
     ;; Hydra
     (use-package hydra
+      :demand
       :config
       (bind-key "C-M-s"
                 (defhydra hydra-smartparens (:color pink)

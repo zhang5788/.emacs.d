@@ -33,7 +33,6 @@
 ;;; Code:
 
 (use-package helm
-  :defer t
   :diminish helm-mode
   :defines (helm-M-x-fuzzy-match
             helm-imenu-fuzzy-match
@@ -89,37 +88,34 @@
     ;; plugins
     (use-package helm-flx
       :pin melpa
+      :demand
       :config (helm-flx-mode 1))
 
     (use-package helm-descbinds
-      :defer t
       :bind ("C-h b" . helm-descbinds))
 
     (use-package helm-swoop
-      :defer t
       :bind (("M-s o" . helm-swoop)
              ("M-s /" . helm-multi-swoop)))
 
     (use-package helm-ag
-      :defer t
       :bind ("M-s s" . helm-ag))
 
     (use-package helm-mt
-      :defer t
       :bind ("C-x t" . helm-mt))
 
     (use-package helm-cmd-t
-      :defer t
       :bind (("C-S-t" . helm-cmd-t)
              ("s-t" . helm-cmd-t)))
 
-    (use-package helm-ls-git :defer t)
-    (use-package helm-projectile :defer t)
-    (use-package helm-flycheck :defer t)
-    (use-package helm-bm :defer t)
+    (use-package helm-ls-git)
+    (use-package helm-projectile)
+    (use-package helm-flycheck)
+    (use-package helm-bm)
 
     ;; Combines isearch, ace-jump-mode, avy and helm-swoop.
     (use-package ace-isearch
+      :demand
       :diminish ace-isearch-mode
       :bind (:map isearch-mode-map
                   ("C-:" . ace-isearch-jump-during-isearch))

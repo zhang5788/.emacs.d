@@ -48,24 +48,20 @@
 
 ;; Which key
 (use-package which-key
-  :defer t
   :diminish which-key-mode
   :init (add-hook 'after-init-hook 'which-key-mode))
 
 ;; Browse url
 (use-package browse-url-dwim
-  :defer t
   :init (add-hook 'after-init-hook 'browse-url-dwim-mode))
 
 ;; Tramp
 (use-package tramp
-  :defer t
   :init (let ((val (if (executable-find "plink") "plink" "ssh")))
           (setq tramp-default-method val)))
 
 ;; Tree explorer
 (use-package neotree
-  :defer t
   :bind (([f12] . neotree-toggle)
          ([C-f12] . neotree-toggle))
   :config
@@ -91,7 +87,6 @@
 
 ;; Dash
 (use-package dash-at-point
-  :defer t
   :pin melpa
   :if sys/macp
   :bind (("\C-cd" . dash-at-point)
@@ -99,7 +94,6 @@
 
 ;; Youdao Dictionay
 (use-package youdao-dictionary
-  :defer t
   :commands youdao-dictionary--region-or-word youdao-dictionary--format-result
   :bind ("C-c y" . youdao-dictionary-search-at-point+)
   :config
@@ -122,20 +116,19 @@
     ))
 
 ;; Search
-(use-package ack :defer t :pin gnu :if (executable-find "ack"))
-(use-package ag :defer t :if (executable-find "ag"))
+(use-package ack :pin gnu :if (executable-find "ack"))
+(use-package ag :if (executable-find "ag"))
 
 ;; Junk file
 (use-package open-junk-file
-  :defer t
   :pin melpa
   :commands open-junk-file)
 
 ;; Misc
-(use-package htmlize :defer t :pin melpa)
-(use-package list-environment :defer t :pin melpa)
-(use-package memory-usage :defer t :pin gnu)
-(use-package eyedropper :defer t :pin melpa)
+(use-package htmlize :pin melpa)
+(use-package list-environment :pin melpa)
+(use-package eyedropper :pin melpa)
+(use-package memory-usage :pin gnu)
 
 (provide 'init-utils)
 

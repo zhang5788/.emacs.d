@@ -33,7 +33,6 @@
 ;;; Code:
 
 (use-package company
-  :defer t
   :diminish company-mode
   :bind (("M-/" . company-complete)
          ("C-c C-y" . company-yasnippet))
@@ -57,7 +56,6 @@
 
     ;; Popup documentation for completion candidates
     (use-package company-quickhelp
-      :defer t
       :if (display-graphic-p)
       :bind (:map company-active-map
                   ("M-h" . company-quickhelp-manual-begin))
@@ -65,32 +63,27 @@
 
     ;; Flx based fuzzy matching for company
     (use-package company-flx
-      :defer t
       :pin melpa
       :init (add-hook 'company-mode-hook 'company-flx-mode))
 
     ;; Sort candidates using completion history
     (use-package company-statistics
-      :defer t
       :pin gnu
       :init (add-hook 'company-mode-hook 'company-statistics-mode))
 
     ;; Company mode backend for C/C++ header files
     (use-package company-c-headers
-      :defer t
       :pin melpa
       :init (push 'company-c-headers company-backends))
 
     ;; Complete for web,html,emmet,jade,slim modes
     (use-package company-web
-      :defer t
       :init (progn (add-to-list 'company-backends 'company-web-html)
                    (add-to-list 'company-backends 'company-web-jade)
                    (add-to-list 'company-backends 'company-web-slim)))
 
     ;; Company mode backend for shell functions
     (use-package company-shell
-      :defer t
       :pin melpa
       :init (progn (push 'company-shell company-backends)
                    (push 'company-fish-shell company-backends)))

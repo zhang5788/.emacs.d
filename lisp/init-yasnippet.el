@@ -33,13 +33,11 @@
 ;;; Code:
 
 (use-package yasnippet
-  :defer t
   :diminish yas-minor-mode
   :init (add-hook 'after-init-hook 'yas-global-mode)
   :config
   (progn
     (use-package dropdown-list
-      :defer t
       :pin melpa
       :commands dropdown-list)
 

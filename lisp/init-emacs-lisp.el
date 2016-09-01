@@ -47,7 +47,6 @@
 
 ;; Enable Eldoc in lisp modes
 (use-package eldoc
-  :defer t
   :diminish eldoc-mode
   :init (dolist (hook '(emacs-lisp-mode-hook lisp-interaction-mode-hook ielm-mode-hook))
           (add-hook hook 'turn-on-eldoc-mode)))
@@ -55,7 +54,6 @@
 ;; Make M-. and M-, work in elisp like they do in slime.
 ;; In Emacs 25, xref is perfect, so only enable in <=24.
 (use-package elisp-slime-nav
-  :defer t
   :if (< emacs-major-version 25)
   :diminish elisp-slime-nav-mode
   :init (dolist (hook '(emacs-lisp-mode-hook lisp-interaction-mode-hook ielm-mode-hook))
@@ -63,9 +61,10 @@
 
 ;; Interactive macro expander
 (use-package macrostep
-  :defer t
-  :bind (:map emacs-lisp-mode-map ("C-c e" . macrostep-expand)
-              :map lisp-interaction-mode-map ("C-c e" . macrostep-expand)))
+  :bind (:map emacs-lisp-mode-map
+              ("C-c e" . macrostep-expand)
+              :map lisp-interaction-mode-map
+              ("C-c e" . macrostep-expand)))
 
 ;; Describe symbol at point
 (defun my-describe-symbol-at-point (symbol)

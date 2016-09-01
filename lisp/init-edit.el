@@ -76,25 +76,21 @@
 
 ;; Delete selection if you insert
 (use-package delsel
-  :defer t
   :init (add-hook 'after-init-hook 'delete-selection-mode))
 
 ;; Rectangle
 ;; for rectangles, CUA is nice
 (use-package cua-rect
   :ensure cua-base
-  :defer t
   :bind (("<C-return>" . cua-rectangle-mark-mode)))
 
 ;; Automatically reload files was modified by external program
 (use-package autorevert
-  :defer t
   :diminish auto-revert-mode
   :init (add-hook 'after-init-hook 'global-auto-revert-mode))
 
 ;; Tree-based completion
 (use-package avy
-  :defer t
   :bind (("C-:" . avy-goto-char)
          ("C-'" . avy-goto-char-2)
          ("M-g f" . avy-goto-line)
@@ -104,18 +100,15 @@
 
 ;; Kill text between the point and the character CHAR
 (use-package zzz-to-char
-  :defer t
   :bind (("M-z" . zzz-to-char)
          ("C-M-z" . zzz-up-to-char)))
 
 ;; Quickly follow links
 (use-package ace-link
-  :defer t
   :init (add-hook 'after-init-hook 'ace-link-setup-default))
 
 ;; Minor mode to aggressively keep your code always indented
 (use-package aggressive-indent
-  :defer t
   :diminish aggressive-indent-mode
   :init (add-hook 'after-init-hook 'global-aggressive-indent-mode)
   :config (dolist (mode '(ruby-mode robot-mode web-mode html-mode css-mode))
@@ -123,7 +116,6 @@
 
 ;; Show number of matches in mode-line while searching
 (use-package anzu
-  :defer t
   :diminish anzu-mode
   :bind (([remap query-replace] . anzu-query-replace)
          ([remap query-replace-regexp] . anzu-query-replace-regexp))
@@ -131,18 +123,15 @@
 
 ;; Increase selected region by semantic units
 (use-package expand-region
-  :defer t
   :bind ("C-=" . er/expand-region))
 
 ;; Move to the beginning/end of line or code
 (use-package mwim
-  :defer t
   :bind (("C-a" . mwim-beginning-of-code-or-line)
          ("C-e" . mwim-end-of-code-or-line)))
 
 ;; Windows-scroll commands
 (use-package pager
-  :defer t
   :pin melpa
   :commands pager-page-down pager-page-up pager-row-down pager-row-up
   :bind (("\C-v"   . pager-page-down)
@@ -156,24 +145,20 @@
 
 ;; Drag stuff (lines, words, region, etc...) around
 (use-package drag-stuff
-  :defer t
   :diminish drag-stuff-mode
   :init (add-hook 'after-init-hook 'drag-stuff-global-mode))
 
 ;; An all-in-one comment command to rule them all
 (use-package comment-dwim-2
-  :defer t
   :bind ("M-;" . comment-dwim-2))
 
 ;; Edit multiple regions in the same way simultaneously
 (use-package iedit
-  :defer t
   :bind (("C-;" . iedit-mode)
          ("C-x r RET" . iedit-rectangle-mode)))
 
 ;; Multiple cursors
 (use-package multiple-cursors
-  :defer t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<". mc/mark-previous-like-this)
@@ -182,14 +167,12 @@
 
 ;; Treat undo history as a tree
 (use-package undo-tree
-  :defer t
   :pin gnu
   :diminish undo-tree-mode
   :init (add-hook 'after-init-hook 'global-undo-tree-mode))
 
 ;; Handling capitalized subwords in a nomenclature
 (use-package subword
-  :defer t
   :diminish subword-mode
   :init (add-hook 'prog-mode-hook 'subword-mode))
 

@@ -33,7 +33,6 @@
 ;;; Code:
 
 (use-package org
-  :defer t
   :bind (("C-c a" . org-agenda))
   :init
   (progn
@@ -45,6 +44,7 @@
   :config
   (progn
     (use-package hydra
+      :demand
       :config
       (progn
         (defhydra hydra-org-template (:color blue :hint nil)

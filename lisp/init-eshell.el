@@ -33,7 +33,6 @@
 ;;; Code:
 
 (use-package eshell
-  :defer t
   :defines (compilation-last-buffer eshell-prompt-function)
   :commands (eshell-interactive-output-p
              eshell-parse-command

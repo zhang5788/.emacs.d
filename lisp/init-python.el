@@ -34,7 +34,6 @@
 
 ;; Python Mode
 (use-package python
-  :defer t
   :defines gud-pdb-command-name pdb-path
   :config
   (progn
@@ -66,24 +65,20 @@
 
     ;; Autopep8
     (use-package py-autopep8
-      :defer t
       :init (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
 
     ;; Anaconda
     (use-package anaconda-mode
-      :defer t
       :diminish anaconda-mode
       :init (add-hook 'python-mode-hook 'anaconda-mode)
       :config
       (progn
         (eval-after-load 'auto-complete
           '(use-package ac-anaconda
-             :defer t
              :init (add-hook 'python-mode-hook 'ac-anaconda-setup)))
 
         (eval-after-load 'company
           '(use-package company-anaconda
-             :defer t
              :defines company-backends
              :init (add-to-list 'company-backends '(company-anaconda :with company-yasnippet))))))
     ))
