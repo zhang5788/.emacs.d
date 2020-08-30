@@ -39,7 +39,6 @@ jobs:
             (run-hooks (quote emacs-startup-hook))
             (run-hooks (quote window-setup-hook)))"'
 
-jobs:
   Windows-build:
     runs-on: windows-latest
     strategy:
