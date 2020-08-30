@@ -60,7 +60,7 @@ jobs:
         version: ${{ matrix.emacs-version }}
 
     - name: test
-      run: 'mv -f ../.emacs.d ~/.emacs.d;
+      run: 'mv -Force ../.emacs.d ~/.emacs.d;
             emacs -nw --batch --eval \
             "(let ((debug-on-error (>= emacs-major-version 26))
                    (package-check-signature nil)
