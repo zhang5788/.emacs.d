@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build:
+  linux-build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,7 +24,7 @@ jobs:
           - snapshot
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - uses: purcell/setup-emacs@master
       with:
@@ -44,4 +44,36 @@ jobs:
             (run-hooks (quote after-init-hook))
             (run-hooks (quote emacs-startup-hook))
             (run-hooks (quote window-setup-hook)))"'
-   
+
+jobs:
+  Windows-build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        emacs-version:
+          - 25.3
+          - 26.3
+          - 27.1
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: purcell/setup-emacs@master
+      with:
+        version: ${{ matrix.emacs-version }}
+
+    - name: test
+      run: 'mv -f ../.emacs.d ~/.emacs.d;
+            emacs -nw --batch --eval \
+            "(let ((debug-on-error (>= emacs-major-version 26))
+                   (package-check-signature nil)
+                   (url-show-status nil)
+                   (early-init-file (locate-user-emacs-file \"early-init.el\"))
+                   (user-init-file (locate-user-emacs-file \"init.el\")))
+            (when (>= emacs-major-version 27)
+              (load early-init-file))
+            (load user-init-file)
+            (run-hooks (quote after-init-hook))
+            (run-hooks (quote emacs-startup-hook))
+            (run-hooks (quote window-setup-hook)))"'
+
