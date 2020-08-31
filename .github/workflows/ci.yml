@@ -8,14 +8,14 @@ jobs:
     strategy:
       matrix:
         emacs-version:
-          - 25.1
-          - 25.2
-          - 25.3
-          - 26.1
-          - 26.2
-          - 26.3
-          - 27.1
-          - snapshot
+          # - 25.1
+          # - 25.2
+          # - 25.3
+          # - 26.1
+          # - 26.2
+          # - 26.3
+          # - 27.1
+          # - snapshot
 
     steps:
     - uses: actions/checkout@v1
@@ -60,7 +60,7 @@ jobs:
         version: ${{ matrix.emacs-version }}
 
     - name: setup
-      run: 'Move-Item -Path "..\\.emacs.d" -Destination "%HOME%\\.emacs.d"'
+      run: 'Copy-Item -Path "..\\.emacs.d" -Destination "%HOME%\\.emacs.d" -Recurse'
 
     - name: test
       run: 'c:\\emacs\\bin\\emacs.exe --batch --eval \
