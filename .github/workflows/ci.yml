@@ -60,7 +60,7 @@ jobs:
         version: ${{ matrix.emacs-version }}
 
     - name: setup
-      run: 'Copy-Item -Path ..\\.emacs.d -Destination $HOME\\.emacs.d -Recurse -Force'
+      run: 'ehco $HOME; Copy-Item -Path ..\\.emacs.d -Destination $HOME\\.emacs.d -Recurse -Force'
 
     - name: test
       run: 'emacs.exe --batch --eval \
