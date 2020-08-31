@@ -59,9 +59,11 @@ jobs:
       with:
         version: ${{ matrix.emacs-version }}
 
+    - name: setup
+      run: 'Move-Item -Path "..\\.emacs.d" -Destination "%HOME%\\.emacs.d"'
+
     - name: test
-      run: 'cp -Recurse -Force ..\\.emacs.d %HOME%\\.emacs.d;
-            c:\\emacs\\bin\\emacs.exe --batch --eval \
+      run: 'c:\\emacs\\bin\\emacs.exe --batch --eval \
             "(let ((debug-on-error (>= emacs-major-version 26))
                    (package-check-signature nil)
                    (url-show-status nil)
