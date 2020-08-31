@@ -63,12 +63,12 @@ jobs:
       run: 'Copy-Item -Path ..\\.emacs.d -Destination $HOME\\.emacs.d -Recurse -Force'
 
     - name: test
-      run: 'emacs.exe --batch --eval
+      run: 'emacs.exe --batch --eval \
             "(let ((debug-on-error (>= emacs-major-version 26))
                    (package-check-signature nil)
                    (url-show-status nil)
-                   (early-init-file (locate-user-emacs-file \"early-init.el\"))
-                   (user-init-file (locate-user-emacs-file \"init.el\")))
+                   (early-init-file (expand-file-name (locate-user-emacs-file \"early-init.el\")))
+                   (user-init-file (expand-file-name (locate-user-emacs-file \"init.el\"))))
             (when (>= emacs-major-version 27)
               (load early-init-file))
             (load user-init-file)
