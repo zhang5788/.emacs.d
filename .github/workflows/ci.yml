@@ -57,4 +57,5 @@ jobs:
       run: 'Copy-Item -Path ..\\.emacs.d -Destination $HOME\\.emacs.d -Recurse -Force'
 
     - name: test
-      run: 'c:\\emacs\\bin\\emacs.exe --batch --eval "(message \"%s\" user-init-file)"'
+      run: 'c:\\emacs\\bin\\emacs.exe --version'
+      # run: 'c:\\emacs\\bin\\emacs.exe --batch --eval "(message \"%s\" user-init-file)"'
