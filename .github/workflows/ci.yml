@@ -57,4 +57,6 @@ jobs:
       run: 'Copy-Item -Path ..\\.emacs.d -Destination $HOME\\.emacs.d -Recurse -Force'
 
     - name: test
-      run: 'emacs.exe --batch --eval "(let ((debug-on-error (>= emacs-major-version 26)) (package-check-signature nil) (url-show-status nil) (early-init-file (expand-file-name (locate-user-emacs-file \"early-init.el\"))) (user-init-file (expand-file-name (locate-user-emacs-file \"init.el\")))) (when (>= emacs-major-version 27) (load early-init-file)) (load user-init-file) (run-hooks (quote after-init-hook)) (run-hooks (quote emacs-startup-hook)) (run-hooks (quote window-setup-hook)))"'
+      # run: 'emacs.exe --debug-init --batch --eval "(let ((debug-on-error (>= emacs-major-version 26)) (package-check-signature nil) (url-show-status nil) (early-init-file (expand-file-name (locate-user-emacs-file \"early-init.el\"))) (user-init-file (expand-file-name (locate-user-emacs-file \"init.el\")))) (when (>= emacs-major-version 27) (load early-init-file)) (load user-init-file) (run-hooks (quote after-init-hook)) (run-hooks (quote emacs-startup-hook)) (run-hooks (quote window-setup-hook)))"'
+      run: 'emacs.exe --debug-init --batch --eval "(message \"test\")"'
+
