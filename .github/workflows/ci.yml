@@ -3,10 +3,11 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  linux-test:
-    runs-on: ubuntu-latest
+  unix-test:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ubuntu-latest, macos-latest]
         emacs-version:
           - 25.1
           - 25.2
