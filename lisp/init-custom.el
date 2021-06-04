@@ -42,12 +42,12 @@
   :group 'centaur
   :type 'string)
 
-(defcustom centaur-full-name "Vincent Zhang"
+(defcustom centaur-full-name "zhang5788"
   "Set user full name."
   :group 'centaur
   :type 'string)
 
-(defcustom centaur-mail-address "seagle0128@gmail.com"
+(defcustom centaur-mail-address "zhang7354@gmail.com"
   "Set user email address."
   :group 'centaur
   :type 'string)
@@ -57,7 +57,7 @@
   :group 'centaur
   :type 'string)
 
-(defcustom centaur-proxy "127.0.0.1:1087"
+(defcustom centaur-proxy "127.0.0.1:7890"
   "Set network proxy."
   :group 'centaur
   :type 'string)

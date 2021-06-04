@@ -84,7 +84,7 @@
       (defun my-pdf-isearch-hl-matches (current matches &optional occur-hack-p)
         "Highlighting edges CURRENT and MATCHES."
         (cl-destructuring-bind (fg1 bg1 fg2 bg2)
-          (pdf-isearch-current-colors)
+            (pdf-isearch-current-colors)
           (let* ((width (car (pdf-view-image-size)))
                  (page (pdf-view-current-page))
                  (window (selected-window))
@@ -128,12 +128,12 @@
               (when highlight-p
                 (pdf-view-display-image
                  (pdf-view-create-image
-                     (pdf-cache-renderpage-highlight
-                      page (car size)
-                      `("white" "steel blue" 0.35 ,@edges))
-                   :map (pdf-view-apply-hotspot-functions
-                         window page size)
-                   :width (car size))))
+                  (pdf-cache-renderpage-highlight
+                   page (car size)
+                   `("white" "steel blue" 0.35 ,@edges))
+                  :map (pdf-view-apply-hotspot-functions
+                        window page size)
+                  :width (car size))))
               (pdf-util-scroll-to-edges
                (pdf-util-scale-relative-to-pixel (car edges)))))))
       (advice-add #'pdf-annot-show-annotation :override #'my-pdf-annot-show-annotation))
@@ -211,64 +211,56 @@
                 elfeed-db-directory (locate-user-emacs-file ".elfeed")
                 elfeed-show-entry-switch #'pop-to-buffer
                 elfeed-show-entry-delete #'delete-window
-                elfeed-feeds '(("https://planet.emacslife.com/atom.xml" planet emacslife)
-                               ("http://www.masteringemacs.org/feed/" mastering)
-                               ("https://oremacs.com/atom.xml" oremacs)
-                               ("https://pinecast.com/feed/emacscast" emacscast)
-                               ("https://www.reddit.com/r/emacs.rss" reddit)))
-    :config
-    ;; Ignore db directory in recentf
-    (push elfeed-db-directory recentf-exclude)
+                shr-inhibit-images t)))
+:config
+;; Ignore db directory in recentf
+(push elfeed-db-directory recentf-exclude)
 
-    ;; Use xwidget if possible
-    (with-no-warnings
-      (defun my-elfeed-show-visit (&optional use-generic-p)
-        "Visit the current entry in your browser using `browse-url'.
+;; Use xwidget if possible
+(with-no-warnings
+  (defun my-elfeed-show-visit (&optional use-generic-p)
+    "Visit the current entry in your browser using `browse-url'.
 If there is a prefix argument, visit the current entry in the
 browser defined by `browse-url-generic-program'."
-        (interactive "P")
-        (let ((link (elfeed-entry-link elfeed-show-entry)))
-          (when link
-            (message "Sent to browser: %s" link)
-            (cond
-             ((featurep 'xwidget-internal)
-              (centaur-webkit-browse-url link))
-             (use-generic-p
-              (browse-url-generic link))
-             (t (browse-url link))))))
-      (advice-add #'elfeed-show-visit :override #'my-elfeed-show-visit)
+    (interactive "P")
+    (let ((link (elfeed-entry-link elfeed-show-entry)))
+      (when link
+        (message "Sent to browser: %s" link)
+        (cond
+         ((featurep 'xwidget-internal)
+          (centaur-webkit-browse-url link))
+         (use-generic-p
+          (browse-url-generic link))
+         (t (browse-url link))))))
+  (advice-add #'elfeed-show-visit :override #'my-elfeed-show-visit)
 
-      (defun my-elfeed-search-browse-url (&optional use-generic-p)
-        "Visit the current entry in your browser using `browse-url'.
+  (defun my-elfeed-search-browse-url (&optional use-generic-p)
+    "Visit the current entry in your browser using `browse-url'.
 If there is a prefix argument, visit the current entry in the
 browser defined by `browse-url-generic-program'."
-        (interactive "P")
-        (let ((entries (elfeed-search-selected)))
-          (cl-loop for entry in entries
-                   do (elfeed-untag entry 'unread)
-                   when (elfeed-entry-link entry)
-                   do (cond
-                       ((featurep 'xwidget-internal)
-                        (centaur-webkit-browse-url it t))
-                       (use-generic-p
-                        (browse-url-generic it))
-                       (t (browse-url it))))
-          (mapc #'elfeed-search-update-entry entries)
-          (unless (or elfeed-search-remain-on-entry (use-region-p))
-            (forward-line))))
-      (advice-add #'elfeed-search-browse-url :override #'my-elfeed-search-browse-url))))
+    (interactive "P")
+    (let ((entries (elfeed-search-selected)))
+      (cl-loop for entry in entries
+               do (elfeed-untag entry 'unread)
+               when (elfeed-entry-link entry)
+               do (cond
+                   ((featurep 'xwidget-internal)
+                    (centaur-webkit-browse-url it t))
+                   (use-generic-p
+                    (browse-url-generic it))
+                   (t (browse-url it))))
+      (mapc #'elfeed-search-update-entry entries)
+      (unless (or elfeed-search-remain-on-entry (use-region-p))
+        (forward-line))))
+  (advice-add #'elfeed-search-browse-url :override #'my-elfeed-search-browse-url))
 
-;; Another Atom/RSS reader
-(use-package newsticker
-  :ensure nil
-  :bind ("C-x W" . newsticker-show-news)
-  :hook (newsticker-treeview-item-mode . centaur-read-mode)
-  :init (setq newsticker-url-list
-              '(("Planet Emacslife" "https://planet.emacslife.com/atom.xml")
-                ("Mastering Emacs" "http://www.masteringemacs.org/feed/")
-                ("Oremacs" "https://oremacs.com/atom.xml")
-                ("EmacsCast" "https://pinecast.com/feed/emacscast")
-                ("Emacs Reddit" "https://www.reddit.com/r/emacs.rss"))))
+
+(use-package elfeed-org
+  :ensure t
+  :init (elfeed-org)
+  :config
+  (setq rmh-elfeed-org-files (list "~/Documents/notes/rss/rss.org")))
+
 
 (provide 'init-reader)
 
